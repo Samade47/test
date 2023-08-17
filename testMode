@@ -1,0 +1,12 @@
+$('.run').on('click', function() {
+  var output; //Assign this your final output to this variable
+    
+  ////////////////////////
+  ///Write your JS here///
+  ////////////////////////
+  
+  $('.console').append('<p>' + output + '</p>');
+});
+$('.clear').on('click', function() {
+  $('.console').empty();
+});
