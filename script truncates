@@ -1,0 +1,67 @@
+var eTable = document.getElementById(this._eDiv.id + "_tbl");
+
+addEventListenerEx(window, "load", function() {     
+        var aCells = eTable.getElementsByTagName("DIV");
+        window.alert(aCells.length);   
+            //When aCells is length of 100, we're ok...but when it's big (like 3,000) I have problems         
+        for (var i = 0; i < aCells.length; i++){
+            Grid.clipText(aCells[i]);
+        }
+}, false);
+
+Grid.clipText = function (oDiv) {   
+
+    //for tooltip       
+    var oCurDiv;
+    var oTagA;
+    var sToolTip;       
+    if (oDiv.firstChild) {
+            if (oDiv.firstChild.firstChild){            
+                oCurDiv = oDiv.firstChild;
+                while (oCurDiv) {
+                    if (is.ie) {
+                        oTagA = oCurDiv;                        
+                    } else {
+                        // there are some different between IE & FireFox.
+                        oTagA = oCurDiv.firstChild.parentNode;                      
+                    }
+                    if (oTagA.tagName == "A") {
+                        sToolTip = oTagA.innerHTML;     
+                        if (sToolTip.indexOf('<b>') > 0) {
+                            sToolTip = sToolTip.replace('<b>',"");
+                            sToolTip = sToolTip.replace('</b>',"");
+                        }
+                        if (sToolTip.indexOf('<B>') > 0) {
+                            sToolTip = sToolTip.replace('<B>',"");
+                            sToolTip = sToolTip.replace('</B>',"");
+                        }                       
+                        oTagA.parentNode.title = convertHTMLToText(sToolTip);
+                    }
+                    oCurDiv = oCurDiv.nextSibling;                                      
+                }
+            } else {
+                oDiv.title = convertHTMLToText(oDiv.innerHTML);
+            }
+        }
+        if (!is.ie) {
+                    var oText = oDiv;           
+                    while (oText.nodeType != 3) {
+                        oText = oText.firstChild;
+                    }
+
+                    var sDisplayText = oText.nodeValue;
+                    if (sDisplayText.length < 3) return; 
+
+                    var lastThree;
+                    sDisplayText = sDisplayText.slice(0, parseInt(oDiv.offsetWidth / 5));
+                    oText.nodeValue = sDisplayText + "...";
+                    while (oDiv.scrollWidth > oDiv.offsetWidth && sDisplayText != "") {
+                        lastThree = sDisplayText.slice(-3);
+                        sDisplayText = sDisplayText.slice(0, sDisplayText.length - 3);
+                        oText.nodeValue = sDisplayText + "...";
+                    }
+                    oText.nodeValue = sDisplayText + lastThree.slice(0, 1) + "...";
+                    while (oDiv.scrollWidth > oDiv.offsetWidth && sDisplayText != "") {
+                        oText.nodeValue = sDisplayText + "...";
+                    }
+                }
